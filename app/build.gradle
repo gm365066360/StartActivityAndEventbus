@@ -1,9 +1,9 @@
-import com.app.plugin.JavassistPlugin
+//import com.app.plugin.JavassistPlugin
 
 apply plugin: 'com.android.application'
-apply plugin: 'realm-android'
-apply plugin: JavassistPlugin //与aspectjx前后顺序 不然遍历不到RealTransform包,只能遍历到ajc包
-apply plugin: 'android-aspectjx'
+//apply plugin: 'realm-android'
+//apply plugin: JavassistPlugin //与aspectjx前后顺序 不然遍历不到RealTransform包,只能遍历到ajc包
+//apply plugin: 'android-aspectjx'
 
 android {
     compileSdkVersion 28
@@ -34,5 +34,6 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     annotationProcessor project(':compiler')
     implementation project(':api')
-    implementation 'org.aspectj:aspectjrt:1.8.14'
+//    implementation 'com.github.gm365066360:StartActivityAndEventbus:1.2'
+
 }

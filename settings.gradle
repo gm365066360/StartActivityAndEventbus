@@ -1,2 +1,2 @@
-include ':app', ':compiler', ':api', ':plugin', ':asplib'
+include ':app', ':compiler', ':api', ':plugin'
 rootProject.name='StartActivityAndEventbus'
