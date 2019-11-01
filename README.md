@@ -7,18 +7,19 @@
 
 
 ### 简单、优雅：
-**Step 1. 给目标Activity需要传递的属性加注解**
+**Step 1. 给目标Activity需要传递的属性加注解 @EventParam **
 ```
 class TargetActivity extends AppCompatActivity {
     @EventParam
     public  Data data;
 ```
-**Step 2. `Build Project` 生成 EventBean**
-<img src=http://chuantu.xyz/t6/702/1572617764x2073530527.png  width="30%" />
+**Step 2. `Build Project` 生成 $$EventBean**
 
-APT generated EventBean.java
+<img src=http://chuantu.xyz/t6/702/1572617764x2073530527.png  width="40%" />
 
-<img src=http://chuantu.xyz/t6/702/1572620778x2073530529.png  width="30%" />
+APT generated $$EventBean.java
+
+<img src=http://chuantu.xyz/t6/702/1572620778x2073530529.png  width="40%" />
 
 **Step 3. 跳转传值代码**
 ```
@@ -49,7 +50,7 @@ TargetActivity$$EventBean
 BActivity$$EventBean.postBack( new Data("data") );
 ```
 
-### 依赖：
+### 添加依赖：
 **项目-build.gradle**
 ```
 buildscript {
@@ -87,3 +88,11 @@ dependencies {
     annotationProcessor 'com.github.gm365066360.StartActivityAndEventbus:compiler:1.4'
 }
 ```
+### 对照
+|$$EventBean|Activity
+|---|---
+|post(this)|startActivity(intent)
+|postForResult(this,callback)|startActivityForResult(intent,requestCode)
+|.builder().setParam()|intent.putExtra(key,value)
+|@EventParam|getIntent().getStringExtra(key)
+|BActivity$$EventBean.postBack(object)|setResult(100,intent)

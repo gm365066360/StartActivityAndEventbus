@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 //        intent.putExtra("data",new BActivity.Data("gaom123")); //需要实现序列化接口
         intent.putExtra("str", "gaom123");
         intent.putExtra("b", true);
-//        startActivity(intent);
+//        startActivityForResult(intent);
 
         //你就瞅瞅麻烦不麻烦
         String str = getIntent().getStringExtra("str");
