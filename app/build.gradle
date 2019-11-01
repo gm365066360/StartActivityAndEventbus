@@ -1,8 +1,8 @@
-//import com.app.plugin.JavassistPlugin
+import com.app.plugin.JavassistPlugin
 
 apply plugin: 'com.android.application'
-//apply plugin: 'realm-android'
-//apply plugin: JavassistPlugin //与aspectjx前后顺序 不然遍历不到RealTransform包,只能遍历到ajc包
+apply plugin: 'realm-android'
+apply plugin: JavassistPlugin //与aspectjx前后顺序 不然遍历不到RealTransform包,只能遍历到ajc包
 //apply plugin: 'android-aspectjx'
 
 android {
@@ -32,8 +32,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 //    implementation project(':asplib')
     implementation 'org.greenrobot:eventbus:3.1.1'
-    annotationProcessor project(':compiler')
-    implementation project(':api')
-//    implementation 'com.github.gm365066360:StartActivityAndEventbus:1.2'
+//    annotationProcessor project(':compiler')
+//    implementation project(':api')
+    implementation 'com.github.gm365066360.StartActivityAndEventbus:api:1.3'
+    annotationProcessor 'com.github.gm365066360.StartActivityAndEventbus:compiler:1.3'
+
 
 }

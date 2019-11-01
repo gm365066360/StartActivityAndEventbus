@@ -6,10 +6,7 @@ import javassist.CtMethod
 
 class Utils {
     static void importBaseClass(ClassPool pool) {
-        pool.importPackage(ParamHelper.OkBusAnnotation)
-        pool.importPackage(ParamHelper.OkBusRegisterAnnotation)
         pool.importPackage(ParamHelper.EventParamAnnotation)
-        pool.importPackage(ParamHelper.OkBusUnRegisterAnnotation)
         pool.importPackage("android.os.Bundle")
         pool.importPackage("com.base.event.OkBus")
         pool.importPackage("com.base.event.Event")

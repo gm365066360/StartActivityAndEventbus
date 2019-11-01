@@ -58,7 +58,6 @@ public class BActivity extends AppCompatActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        BActivity$$EventBean.injectParam(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_b);
         Log.e("gaom string1= ",data.string1);
