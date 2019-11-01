@@ -25,29 +25,31 @@ APT generated $$EventBean.java
 ```
 TargetActivity$$EventBean
                 .builder()
-                .setData(new Data("sss"))
+                .setData(new Data("sss"))//根据所加注解自动生成对应属性的set方法
                 .create()
                 .post(this);
 ```
 **others**
+
+* `postBack` 代替 `setResult`
+
+```
+BActivity$$EventBean.postBack( new Data("data") );
+```
+
 * `postForResult` 代替 `startActivityForResult`
 
 ```
 TargetActivity$$EventBean
                 .builder()
-                .setData(new Data("sss"))
+                .setData(new Data("sss"))//根据所加注解自动生成对应属性的set方法
                 .create()
-                .postForResult(this, new TargetActivity$$EventBean.Callback<Data>() {
+                .postForResult(this, new TargetActivity$$EventBean.Callback<Data>() {//泛型<Data>为$$EventBean.postBack所传类型
                     @Override
                     public void onResult() {
                         Log.e(" onResult= ", it.getString1());
                     }
                 });
-```
-* `postBack` 代替 `setResult`
-
-```
-BActivity$$EventBean.postBack( new Data("data") );
 ```
 
 ### 添加依赖：
