@@ -34,7 +34,7 @@ TargetActivity$$EventBean
 * `postBack` 代替 `setResult`
 
 ```
-BActivity$$EventBean.postBack( new Data("data") );
+TargetActivity$$EventBean.postBack( new Data("data") );
 ```
 
 * `postForResult` 代替 `startActivityForResult`
@@ -47,6 +47,7 @@ TargetActivity$$EventBean
                 .postForResult(this, new TargetActivity$$EventBean.Callback<Data>() {//泛型<Data>为$$EventBean.postBack所传类型
                     @Override
                     public void onResult() {
+                        //it即是传回的结果,泛型<Data>
                         Log.e(" onResult= ", it.getString1());
                     }
                 });
@@ -97,4 +98,4 @@ dependencies {
 |postForResult(this,callback)|startActivityForResult(intent,requestCode)
 |.builder().setParam()|intent.putExtra(key,value)
 |@EventParam|getIntent().getStringExtra(key)
-|BActivity$$EventBean.postBack(object)|setResult(100,intent)
+|TargetActivity$$EventBean.postBack(object)|setResult(100,intent)
