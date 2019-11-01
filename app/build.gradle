@@ -1,0 +1,38 @@
+import com.app.plugin.JavassistPlugin
+
+apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
+apply plugin: JavassistPlugin //与aspectjx前后顺序 不然遍历不到RealTransform包,只能遍历到ajc包
+apply plugin: 'android-aspectjx'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.gaom.startactivityandeventbus"
+        minSdkVersion 15
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+//    implementation project(':asplib')
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    annotationProcessor project(':compiler')
+    implementation project(':api')
+    implementation 'org.aspectj:aspectjrt:1.8.14'
+}

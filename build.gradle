@@ -1,0 +1,40 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+
+        maven{
+            url uri('repo')
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.4'
+        classpath 'com.app.plugin:gradleplugin:1.0.0'
+        classpath "io.realm:realm-gradle-plugin:3.4.0"
+        
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        maven{
+            url ("http://maven.aliyun.com/nexus/content/groups/public/")
+        }
+        google()
+        jcenter()
+        
+    }
+}
+
+//不加这一句MakeProject会报错，其余都正常无影响
+task compileJava {}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

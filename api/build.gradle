@@ -1,0 +1,10 @@
+apply plugin: 'java'
+apply plugin: 'com.github.dcendents.android-maven'
+group='com.github.Tkk'
+version = "1.1"
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
