@@ -6,15 +6,14 @@
 * Javassist注入目标activity到Bean
 
 
-### 简单、优雅：
-
-** Step 1. 给目标Activity需要传递的属性加注解 @EventParam **
+### 简单、优雅
+**Step 1. 给目标Activity需要传递的属性加注解 @EventParam**
 ```
 class TargetActivity extends AppCompatActivity {
     @EventParam
     public  Data data;
 ```
-** Step 2. `Build Project` 生成 $$EventBean**
+**Step 2. `Build Project` 生成 $$EventBean**
 
 <img src=http://chuantu.xyz/t6/702/1572617764x2073530527.png  width="40%" />
 
@@ -22,7 +21,7 @@ APT generated $$EventBean.java
 
 <img src=http://chuantu.xyz/t6/702/1572620778x2073530529.png  width="40%" />
 
-** Step 3. 跳转传值代码**
+**Step 3. 跳转传值代码**
 ```
 TargetActivity$$EventBean
                 .builder()
