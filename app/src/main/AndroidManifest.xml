@@ -18,6 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".BActivity" />
+        <activity android:name=".CActivity" />
     </application>
 
 </manifest>

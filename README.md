@@ -1,10 +1,18 @@
-# 代替Intent、简化传值方案
+# 面向AOP，代替Intent、简化传值方案
+
+### 痛点
+
+* 定义key,想名字是个麻烦事儿!
+* 目标activity需要取值、赋值俩个操作!
+* 需要返回结果时需重写onActivityResult方法!
+* 定义requestCode,定义resultCode,"去"和"回"代码分隔两处,逻辑不连贯!
+* 自定义Bean传值需要序列化!
 
 ### 思路
-* APT生成参数容器Bean、Builder模式赋值
-* Bean中对EventBus传递、接收
-* Javassist注入目标activity到Bean
-
+* APT根据注解生成参数容器Bean、Builder模式链式set方法赋值
+* Bean中对EventBus广播、订阅
+* Javassist注入,订阅时参数被同步到目标activity
+* Callback同理
 
 ### 简单、优雅
 **Step 1. 给目标Activity需要传递的属性加注解 @EventParam**
@@ -49,6 +57,26 @@ TargetActivity$$EventBean
                     public void onResult() {
                         //it即是传回的结果,泛型<Data>
                         Log.e(" onResult= ", it.getString1());
+                    }
+                });
+```
+
+* 返回可变参数
+
+```
+ TargetActivity$$EventBean.postBack("data1","data2",33,true ,new Data("cData"));
+```
+
+```
+ TargetActivity$$EventBean
+                .builder()
+                .setName( "sss" )
+                .create()
+                .postForResult(this, new TargetActivity$$EventBean.Callback2(){//注意:这里换成Callback2来接收可变参数数组
+                    @Override
+                    public void onResult() {
+                        //打印出返回的数组
+                        Log.e("gaom onResult= ", Arrays.toString(params));
                     }
                 });
 ```

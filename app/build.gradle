@@ -32,10 +32,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 //    implementation project(':asplib')
     implementation 'org.greenrobot:eventbus:3.1.1'
-//    annotationProcessor project(':compiler')
-//    implementation project(':api')
-    implementation 'com.github.gm365066360.StartActivityAndEventbus:api:1.4'
-    annotationProcessor 'com.github.gm365066360.StartActivityAndEventbus:compiler:1.4'
+    annotationProcessor project(':compiler')
+    implementation project(':api')
+//    implementation 'com.github.gm365066360.StartActivityAndEventbus:api:1.4'
+//    annotationProcessor 'com.github.gm365066360.StartActivityAndEventbus:compiler:1.4'
 
 
 }

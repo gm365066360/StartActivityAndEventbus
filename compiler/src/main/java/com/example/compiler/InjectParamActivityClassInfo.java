@@ -1,10 +1,12 @@
 package com.example.compiler;
 
 import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
@@ -16,6 +18,7 @@ import java.util.List;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
 public class InjectParamActivityClassInfo {
@@ -103,8 +106,7 @@ public class InjectParamActivityClassInfo {
 
         /**=============================================== 内部类 MyObserver ========================================================*/
 
-        /**=============================================== 内部类 Callback ========================================================*/
-//                .addSuperinterface(ParameterizedTypeName.get(ClassName.get("com.example.base"
+        /**=============================================== 内部类 Callback start ========================================================*/
 
         /**
          *  内部类 Callback
@@ -196,13 +198,81 @@ public class InjectParamActivityClassInfo {
 //                        ClassName.bestGuess("org.greenrobot.eventbus.EventBus"))
 //                .addStatement(" target=null");
 
-        /**=============================================== 内部类 Callback ========================================================*/
+        /**=============================================== 内部类 Callback end========================================================*/
+        /**=============================================== 内部类 Callback2 start========================================================*/
+
+        /**
+         *  内部类 Callback2
+         */
+        TypeSpec.Builder builderCallback2 = TypeSpec.classBuilder("Callback2")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC )
+                .addField( Object[].class, "params", Modifier.PUBLIC);
+//                .build();
+//                .addField(FieldSpec.builder(TypeName.BOOLEAN, "isDataByIntent", Modifier.PRIVATE).build());
+
+        /**
+         * Callback2 构造方法
+         */
+        MethodSpec.Builder constructorCallback21 = MethodSpec.constructorBuilder()
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter( Object[].class , "objects"  )
+                .addStatement("this.params = objects")  ;
+        /**
+         * Callback2 构造方法
+         */
+        MethodSpec.Builder constructorCallback22 = MethodSpec.constructorBuilder()
+                .addModifiers(Modifier.PUBLIC)  ;
+
+        /**
+         * Callback2  onCreate
+         */
+        MethodSpec.Builder onCreateCallback2Builder = MethodSpec.methodBuilder("onCreate")
+                .addModifiers(Modifier.PUBLIC,Modifier.FINAL)
+                .addStatement("$L.getDefault().register(this)",
+                        ClassName.bestGuess("org.greenrobot.eventbus.EventBus"));
+
+        /**
+         * Callback2 onStop
+         */
+        MethodSpec.Builder onStopCallback2Builder = MethodSpec.methodBuilder("onStop")
+                .addModifiers(Modifier.PUBLIC,Modifier.FINAL)
+                .addStatement(" $L.getDefault().unregister(this)",
+                        ClassName.bestGuess("org.greenrobot.eventbus.EventBus")) ;
+
+        /**
+         * Callback2  onResult
+         */
+        MethodSpec.Builder onResult2Builder = MethodSpec.methodBuilder("onResult")
+                .addModifiers(Modifier.PUBLIC )
+                .addJavadoc("By the subclass overwrite this method and the field \"params\" has result callback ;" +
+                        "\n@see #postBack(Object...)" +
+                        "\n" );
+
+        /**
+         * Callback2  onReceive
+         */
+        MethodSpec.Builder onReceive2CallbackBuilder = MethodSpec.methodBuilder("onReceive")
+                .addModifiers(Modifier.PUBLIC,Modifier.FINAL)
+                .addAnnotation(AnnotationSpec.builder(
+                        ClassName.bestGuess("org.greenrobot.eventbus.Subscribe") )
+                        .addMember("threadMode", "$L.MAIN",
+                                ClassName.bestGuess("org.greenrobot.eventbus.ThreadMode"))
+                        .addMember("sticky", "true")
+                        .build() )
+                .addCode("params = eventBean.params;\n" +
+                                "onResult();\n" +
+                                "onStop();\n"  )
+                .addParameter(
+                        ClassName.get("","Callback2")  ,
+                        "eventBean") ;
+        /**=============================================== 内部类 Callback2 end========================================================*/
 
         /**
          * Builder数据内部类
          */
         TypeSpec.Builder builderInnerTypeBuilder = TypeSpec.classBuilder("Builder")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+
 //                .addField(FieldSpec.builder(TypeNameUtils.CONTEXT, "context", Modifier.PRIVATE).build());
 //                .addField(FieldSpec.builder(TypeName.BOOLEAN, "isDataByIntent", Modifier.PRIVATE).build());
 //        /**
@@ -238,6 +308,7 @@ public class InjectParamActivityClassInfo {
                 .addStatement(" this.builder = builder");
 //                .addStatement("mContent = builder.context");
 
+        //Class<T>
         ParameterizedTypeName inputMapTypeOfRoot = ParameterizedTypeName.get(
                 ClassName.get(Class.class),
                 ClassName.bestGuess(bindingClassName.simpleName() ));
@@ -276,12 +347,37 @@ public class InjectParamActivityClassInfo {
                         ClassName.bestGuess("org.greenrobot.eventbus.EventBus"))
                 .addStatement("callback.onCreate()");
         /**
+         * postForResult2
+         */
+        MethodSpec.Builder postForResult2Builder = MethodSpec.methodBuilder("postForResult")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(TypeNameUtils.ACTIVITY, "from" )
+                .addParameter( ClassName.get("","Callback2"), "callback" )
+                .addStatement("$T intent = new $T(from, $T.class)", TypeNameUtils.INTENT, TypeNameUtils.INTENT, TypeName.get(mClassElement.asType()))
+                .addStatement("from.startActivity(intent)")
+                .addStatement("$L.getDefault().postSticky(this)",
+                        ClassName.bestGuess("org.greenrobot.eventbus.EventBus"))
+                .addStatement("callback.onCreate()");
+        /**
          * postBack
          */
         MethodSpec.Builder postBackBuilder = MethodSpec.methodBuilder("postBack")
                 .addModifiers(Modifier.PUBLIC ,Modifier.STATIC)
                 .addParameter( ClassName.get("","Object"), "obj" )
                 .addStatement("$L.getDefault().post(new Callback<>(obj))",
+                        ClassName.bestGuess("org.greenrobot.eventbus.EventBus"));
+
+//        ParameterSpec android = ParameterSpec.builder(TypeName.get(), "android")
+//                .addModifiers(Modifier.FINAL)
+//                .build();
+
+        /**
+         * postBack2
+         */
+        MethodSpec.Builder postBack2Builder = MethodSpec.methodBuilder("postBack")
+                .addModifiers(Modifier.PUBLIC ,Modifier.STATIC)
+                .addParameter(TypeVariableName.get("Object...") ,   "obj" )
+                .addStatement("$L.getDefault().post(new Callback2(obj))",
                         ClassName.bestGuess("org.greenrobot.eventbus.EventBus"));
 
   /**
@@ -293,8 +389,9 @@ public class InjectParamActivityClassInfo {
                 .addStatement("target.getLifecycle().addObserver(new MyObserver(target))") ;
 
 
-//       typeName  ->   @EventParam
-//       name   ->      public  String s1;
+        //public  String s1;
+//       typeName  ->   String
+//       name   ->       s1;
         for (int i = 0; i < paramInfos.size(); i++) {
             ParamInfo paramInfo = paramInfos.get(i);
 
@@ -338,6 +435,13 @@ public class InjectParamActivityClassInfo {
         builderCallback.addMethod(onResultBuilder.build());
         builderCallback.addMethod(onReceiveCallbackBuilder.build());
 
+        builderCallback2.addMethod(constructorCallback21.build());
+        builderCallback2.addMethod(constructorCallback22.build());
+        builderCallback2.addMethod(onCreateCallback2Builder.build());
+        builderCallback2.addMethod(onStopCallback2Builder.build());
+        builderCallback2.addMethod(onResult2Builder.build());
+        builderCallback2.addMethod(onReceive2CallbackBuilder.build());
+
 //        builderMyObserver.addMethod(onCreateBuilder.build());
         //生成类
         TypeSpec finderClass = TypeSpec.classBuilder(creatClassName)
@@ -358,6 +462,7 @@ public class InjectParamActivityClassInfo {
                 //跳转方法
                 .addMethod(goBuilder.build())
                 .addMethod(postForResultBuilder.build())
+                .addMethod(postForResult2Builder.build())
                 //builder方法生成对象
                 .addMethod(builderBuider.build())
                 //使用intent携带数据
@@ -366,9 +471,11 @@ public class InjectParamActivityClassInfo {
                 .addType(builderInnerTypeBuilder.build())
                 .addType(builderMyObserver.build())
                 .addType(builderCallback.build())
+                .addType(builderCallback2.build())
                 //目标类赋值方法
                 .addMethod(bindBuilder.build())
                 .addMethod(postBackBuilder.build())
+                .addMethod(postBack2Builder.build())
                 .addJavadoc("APT generate code\nfor startActivity and EventBus deliver values and receive result" +
                         "\n")
 //                        ,ClassName.get("com.example.api","EventParam"))

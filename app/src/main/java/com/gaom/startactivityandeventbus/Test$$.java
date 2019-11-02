@@ -11,7 +11,8 @@ import com.example.base.BaseEvent;
 import org.greenrobot.eventbus.Subscribe;
 
 
-public class Test$$ implements BaseEvent<DetailActivity> {
+
+public class Test$$ implements BaseEvent<CActivity> {
     private Test$$.Builder builder;
 
     private Test$$(final Test$$.Builder builder) {
@@ -19,13 +20,17 @@ public class Test$$ implements BaseEvent<DetailActivity> {
     }
 
     public void post(Context from) {
-        Intent intent = new Intent(from, DetailActivity.class);
+        Intent intent = new Intent(from, CActivity.class);
         from.startActivity(intent);
         org.greenrobot.eventbus.EventBus.getDefault().postSticky(this);
     }
 
-    public void postForResult(Activity from, Test$$.Callback callback) {
-        Intent intent = new Intent(from, DetailActivity.class);
+    public static void postBack(Object... obj) {
+        org.greenrobot.eventbus.EventBus.getDefault().post(new Test$$.Callback2(obj));
+    }
+
+    public void postForResult(Activity from, Test$$.Callback2 callback) {
+        Intent intent = new Intent(from, CActivity.class);
         from.startActivity(intent);
         org.greenrobot.eventbus.EventBus.getDefault().postSticky(this);
         callback.onCreate();
@@ -35,12 +40,8 @@ public class Test$$ implements BaseEvent<DetailActivity> {
         return new Test$$.Builder();
     }
 
-    public static void injectParam(final DetailActivity target) {
+    public static void injectParam(final CActivity target) {
         target.getLifecycle().addObserver(new Test$$.MyObserver(target));
-    }
-
-    public static void postBack(Object obj) {
-        org.greenrobot.eventbus.EventBus.getDefault().post(new Test$$.Callback<>(obj));
     }
 
     public static class Builder {
@@ -52,14 +53,14 @@ public class Test$$ implements BaseEvent<DetailActivity> {
         }
 
         public Test$$ create() {
-            return   new Test$$(this);
+            return new Test$$(this);
         }
     }
 
     public static class MyObserver implements LifecycleObserver {
-        private DetailActivity target;
+        private CActivity target;
 
-        private MyObserver(DetailActivity target) {
+        private MyObserver(CActivity target) {
             this.target = target;
             org.greenrobot.eventbus.EventBus.getDefault().register(this);
         }
@@ -69,24 +70,23 @@ public class Test$$ implements BaseEvent<DetailActivity> {
                 sticky = true
         )
         public void onReceive(Test$$ eventBean) {
-            target.name =  eventBean.builder.name;
+            target.name = eventBean.builder.name;
         }
 
         @OnLifecycleEvent(android.arch.lifecycle.Lifecycle.Event.ON_STOP)
         public void onStop() {
             org.greenrobot.eventbus.EventBus.getDefault().unregister(this);
-            target=null;
+            target = null;
         }
     }
 
-    public static class Callback<T> {
-        public T it;
+    public static class Callback2 {
+        public Object [] params;
 
-        public Callback(T t) {
-            this.it = t;
+        public Callback2(Object... objects) {
+          this.  params =  objects ;
         }
-
-        public Callback() {
+        public Callback2() {
         }
 
         public final void onCreate() {
@@ -98,8 +98,9 @@ public class Test$$ implements BaseEvent<DetailActivity> {
         }
 
         /**
-         * By the subclass overwrite this method and the field "it" has result of <T> ; 
-         * @see #postBack(Object)
+         * By the subclass overwrite this method and the field "params" has result callback ;
+         *
+         * @see #postBack(Object...)
          */
         public void onResult() {
         }
@@ -108,25 +109,10 @@ public class Test$$ implements BaseEvent<DetailActivity> {
                 threadMode = org.greenrobot.eventbus.ThreadMode.MAIN,
                 sticky = true
         )
-        public final void onReceive(Test$$.Callback<T> eventBean) {
-            if (this.getClass().getGenericSuperclass() instanceof java.lang.reflect.ParameterizedType &&
-                    ((java.lang.reflect.ParameterizedType) (this.getClass().getGenericSuperclass())).getActualTypeArguments().length > 0) {
-
-                Class mPresenterClass = (Class) ((java.lang.reflect.ParameterizedType) (this.getClass()
-                        .getGenericSuperclass())).getActualTypeArguments()[0];
-
-                if (eventBean.it.getClass().getSimpleName().equals(mPresenterClass.getSimpleName())) {
-                    it= (T) eventBean.it;
-                    onResult();
-                    onStop();
-                }
-            }else {
-                try {
-                    throw new Exception("the <T> of CodeBlock #postForResult(this,Test$$.Callback<T>(){}) not found!");
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
+        public final void onReceive(Test$$.Callback2 eventBean) {
+                params = eventBean.params;
+                onResult();
+                onStop();
         }
     }
 }

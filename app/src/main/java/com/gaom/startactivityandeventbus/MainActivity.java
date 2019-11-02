@@ -9,8 +9,10 @@ import android.view.View;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,19 @@ public class MainActivity extends AppCompatActivity {
                         });
     }
 
+    public void go__c(View view) {
+        //优雅
+        CActivity$$EventBean
+                .builder()
+                .setName( "gaom123" )
+                .create()
+                .postForResult(this, new CActivity$$EventBean.Callback2(){
+                    @Override
+                    public void onResult() {
+                        Log.e("gaom onResult= ", Arrays.toString(params));
+                    }
+                });
+    }
     public void go__Activity(View view) {
         ArrayList<String> strings = new ArrayList<>();
         strings.add("123123a");
@@ -97,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 });
+
     }
 
 

@@ -1,11 +1,13 @@
 package com.example.compiler;
- 
+
 import com.example.api.EventParam;
 import com.google.auto.service.AutoService;
+import com.squareup.javapoet.TypeName;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,11 +20,14 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import javax.tools.Diagnostic;
 
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
@@ -67,6 +72,51 @@ public class InjectParamProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+//        mMessager.printMessage(Diagnostic.Kind.NOTE , "process...");
+
+        /*
+        注: process...
+注: size=2
+注: params.size=3
+注: Name=i1,typeName=int
+注: Name=b2,typeName=boolean
+注: Name=f3,typeName=float
+注: params.size=3
+注: Name=str1,typeName=java.lang.String
+注: Name=str2,typeName=java.lang.String
+注: Name=i3,typeName=int*/
+//        TypeMirror stringType =
+//                mElementUtils.getTypeElement(String.class.getCanonicalName()).asType();
+//        Set<? extends Element> elementsAnnotatedWith = roundEnvironment.getElementsAnnotatedWith(BackParam.class);
+//        mMessager.printMessage(Diagnostic.Kind.NOTE , "size="+elementsAnnotatedWith.size());
+//        for (Element annotatedElement :elementsAnnotatedWith) {
+//
+//            ExecutableElement exeElement = (ExecutableElement) annotatedElement;
+//
+//            BackParam bindAnnotation = exeElement.getAnnotation(BackParam.class);
+//            String value = bindAnnotation.value();
+//            if (value.isEmpty()){
+//                mMessager.printMessage(Diagnostic.Kind.NOTE , "BackParam.value.isEmpty()");
+//            }else {
+//                mMessager.printMessage(Diagnostic.Kind.NOTE , "BackParam.value="+value);
+//            }
+//
+//            List<? extends VariableElement> params = exeElement.getParameters();
+//            mMessager.printMessage(Diagnostic.Kind.NOTE , "params.size="+params.size());
+//            for (VariableElement variableElement :params) {
+////                TypeMirror secondArgumentType = variableElement.asType();
+//                TypeName   typeName = TypeName.get(variableElement.asType());
+//                String  name = variableElement.getSimpleName().toString();
+//                mMessager.printMessage(Diagnostic.Kind.NOTE , "Name="+name+",typeName="+ typeName.toString());
+////                if (secondArgumentType.equals(stringType)  ) {
+////
+////                }
+//            }
+//
+//        }
+
+
+
         for (Element annotatedElement : roundEnvironment.getElementsAnnotatedWith(EventParam.class)) {
             parseInjectActivity(annotatedElement);
         }
@@ -85,6 +135,8 @@ public class InjectParamProcessor extends AbstractProcessor {
      * @param element
      */
     private void parseInjectActivity(Element element) {
+
+
         //判断注解参数的合法性
         Set<Modifier> modifiers = element.getModifiers();
         if (modifiers.contains(Modifier.PRIVATE) || modifiers.contains(Modifier.FINAL)) {

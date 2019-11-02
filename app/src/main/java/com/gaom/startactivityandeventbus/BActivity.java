@@ -41,8 +41,6 @@ public class BActivity extends AppCompatActivity {
     @EventParam
     public ArrayList<String> stringArrayList;
     public void go__back(View view) {
-//        setResult(100,new Intent().putExtra("back","gaom2"));
-//        finish();
         BActivity$$EventBean.postBack( true );
         BActivity$$EventBean.postBack( 2 );
         BActivity$$EventBean.postBack( "3" );
@@ -54,8 +52,13 @@ public class BActivity extends AppCompatActivity {
                 .putExtra("userName","userName123")
                 .putExtra("age",22)
         );
-//        finish();
+
+
+        finish();
     }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,24 +69,6 @@ public class BActivity extends AppCompatActivity {
         Log.e("gaom int1= ", int1+"");
         Log.e("gaom aFloat= ", aFloat+"");
         Log.e("gaom Arrays= ", Arrays.toString(stringArrayList.toArray()));
-
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.e("gaom = ","onStop");
-        Log.e("gaom = ",data.string1);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e("gaom = ","onResume");
-        Log.e("gaom = ",data.string1);
-
     }
 
 
