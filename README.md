@@ -91,7 +91,7 @@ buildscript {
     }
     dependencies {
         ...
-        classpath 'com.github.gm365066360.StartActivityAndEventbus:plugin:1.4'
+        classpath 'com.github.gm365066360.StartActivityAndEventbus:plugin:1.5'
         classpath "io.realm:realm-gradle-plugin:3.4.0"
     }
 }
@@ -115,8 +115,8 @@ apply plugin: JavassistPlugin
 dependencies {
     ...
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.github.gm365066360.StartActivityAndEventbus:api:1.4'
-    annotationProcessor 'com.github.gm365066360.StartActivityAndEventbus:compiler:1.4'
+    implementation 'com.github.gm365066360.StartActivityAndEventbus:api:1.5'
+    annotationProcessor 'com.github.gm365066360.StartActivityAndEventbus:compiler:1.5'
 }
 ```
 ### 对照
